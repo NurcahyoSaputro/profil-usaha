@@ -1,0 +1,65 @@
+{
+  "entities": {
+    "SiteContent": {
+      "title": "Site Content",
+      "description": "General content for the website sections.",
+      "type": "object",
+      "properties": {
+        "hero": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "subtitle": { "type": "string" },
+            "buttonText": { "type": "string" },
+            "imageUrl": { "type": "string" }
+          }
+        },
+        "about": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "description": { "type": "string" },
+            "points": { "type": "array", "items": { "type": "string" } },
+            "quote": { "type": "string" },
+            "author": { "type": "string" },
+            "role": { "type": "string" },
+            "image1": { "type": "string" },
+            "image2": { "type": "string" }
+          }
+        },
+        "contact": {
+          "type": "object",
+          "properties": {
+            "phone": { "type": "string" },
+            "email": { "type": "string" },
+            "address": { "type": "string" }
+          }
+        }
+      }
+    },
+    "Product": {
+      "title": "Product",
+      "description": "A cassava chip product variant.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "string" },
+        "image": { "type": "string" },
+        "tag": { "type": "string" },
+        "order": { "type": "number" }
+      },
+      "required": ["name", "price"]
+    }
+  },
+  "firestore": {
+    "siteContent": {
+      "schema": "SiteContent",
+      "description": "Global website content."
+    },
+    "products": {
+      "schema": "Product",
+      "description": "List of product variants."
+    }
+  }
+}
