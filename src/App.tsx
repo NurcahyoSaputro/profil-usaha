@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import Products from "./components/Products";
@@ -8,30 +9,7 @@ import Footer from "./components/Footer";
 import Admin from "./components/Admin";
 import { subscribeToSiteContent, subscribeToProducts, SiteContent, Product } from './services/contentService';
 
-export default function App() {
-  const [isAdmin, setIsAdmin] = useState(window.location.pathname === '/admin');
-  const [content, setContent] = useState<SiteContent | null>(null);
-  const [products, setProducts] = useState<Product[]>([]);
-
-  useEffect(() => {
-    const unsubscribeContent = subscribeToSiteContent(setContent);
-    const unsubscribeProducts = subscribeToProducts(setProducts);
-
-    // Simple routing
-    const handlePath = () => setIsAdmin(window.location.pathname === '/admin');
-    window.addEventListener('popstate', handlePath);
-    
-    return () => {
-      unsubscribeContent();
-      unsubscribeProducts();
-      window.removeEventListener('popstate', handlePath);
-    };
-  }, []);
-
-  if (isAdmin) {
-    return <Admin />;
-  }
-
+function MainSite({ content, products }: { content: SiteContent | null, products: Product[] }) {
   return (
     <div className="min-h-screen">
       <Navbar />
@@ -43,5 +21,31 @@ export default function App() {
       </main>
       <Footer />
     </div>
+  );
+}
+
+export default function App() {
+  const [content, setContent] = useState<SiteContent | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const unsubscribeContent = subscribeToSiteContent(setContent);
+    const unsubscribeProducts = subscribeToProducts(setProducts);
+
+    return () => {
+      unsubscribeContent();
+      unsubscribeProducts();
+    };
+  }, []);
+
+  return (
+    <HashRouter>
+      <Routes>
+        <Route path="/" element={<MainSite content={content} products={products} />} />
+        <Route path="/admin" element={<Admin />} />
+        {/* Fallback for any other route */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </HashRouter>
   );
 }
